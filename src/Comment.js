@@ -7,11 +7,18 @@ import {
   ModalFooter,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addComment, deleteComment, replyComment,deleteReplyComment} from "./Action";
+import {
+  addComment,
+  deleteComment,
+  replyComment,
+  deleteReplyComment,
+  replyLike,
+} from "./Action";
+import "./App.css";
 
 export default function Comment() {
   const data = useSelector((state) => state.mainReducer);
-  console.log(data);
+  console.log(data, "mainReducer Data");
   const dispatch = useDispatch();
   const [idToReply, setIdToReply] = useState(null);
   const [show, setShow] = useState(false);
@@ -23,8 +30,8 @@ export default function Comment() {
   };
   return (
     <div>
-      <Button
-        style={{ float: "right" }}
+      <Button variant="success"
+        className="addButton"
         onClick={() => {
           setShow(true);
         }}
@@ -35,7 +42,7 @@ export default function Comment() {
       <br />
       <br />
 
-      <Modal show={show}>
+      <Modal show={show || show2}>
         <ModalBody>
           <FormControl
             value={inputData}
@@ -47,17 +54,25 @@ export default function Comment() {
         </ModalBody>
         <ModalFooter>
           <Button
+            variant="outline-info"
             onClick={() => {
-              dispatch(addComment(inputData));
+              {
+                show
+                  ? dispatch(addComment(inputData))
+                  : dispatch(replyComment(inputData, idToReply));
+              }
               setShow(false);
+              setShow2(false);
               setInputData("");
             }}
           >
             Comment
           </Button>
           <Button
+            variant="outline-danger"
             onClick={() => {
               setShow(false);
+              setShow2(false);
               setInputData("");
             }}
           >
@@ -66,54 +81,52 @@ export default function Comment() {
         </ModalFooter>
       </Modal>
 
-      <Modal show={show2}>
-        <ModalBody>
-          <FormControl
-            value={inputData}
-            onChange={(e) => setInputData(e.target.value)}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            onClick={() => {
-              dispatch(replyComment(inputData, idToReply));
-              setShow2(false);
-              setInputData("");
-            }}
-          >
-            Comment
-          </Button>
-          <Button onClick={() => setShow2(false)}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
-
-      <div >
+      <div>
         {data.map((data) => {
           return (
-            <div key={data.id} style={{border:"2px solid black",borderRadius:"10px",background:"grey"}} >
-              <div
-                style={{ display: "flex", justifyContent: "space-between",marginTop:"5px",marginLeft:"5px"}}
-                
-              >
-                <h3 style={{border:"2px solid black",width:"91%",borderRadius:"10px"}}>{data.comment}</h3>
-                <div>
-                  <Button onClick={() => replyFunction(data.id)}>REPLY</Button>
-                  <Button onClick={() => dispatch(deleteComment(data.id))}>
-                    {" "}
-                    DELETE
+            <div key={data.id} className="commentContainer">
+              <div className="commentDiv">
+                <h3>{data.comment}</h3>
+                <div className="commentButtons">
+                  <Button variant="outline-dark" onClick={() => replyFunction(data.id)}>
+                    Reply
+                  </Button>
+                  &nbsp;
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => dispatch(deleteComment(data.id))}
+                  >
+                    Delete
                   </Button>
                 </div>
               </div>
-              {
-                  data.replyComment != ""  ? (<div style={{display:"flex",justifyContent:"space-between",marginLeft: "5rem" }}>
-                  <h4 style={{border:"2px solid black",width:"90%",borderRadius:"10px"}}>{data.replyComment}</h4>
-                  <div>
-                  <Button>Likes {data.likes}</Button>
-                  <Button onClick={()=>dispatch(deleteReplyComment(data.id))}>Delete</Button>
-                  </div>
-                </div>) : ""
-              }
-              
+              {data.replyComments.length > 0 &&
+                data.replyComments.map((reply) => {
+                  return (
+                    <div className="replyContainer" key={reply.replyId}>
+                      <h4>{reply.reply}</h4>
+                      <div className="replyDivButtons">
+                        <Button
+                          variant="outline-secondary"
+                          onClick={() => {
+                            dispatch(replyLike(data.id, reply.replyId));
+                          }}
+                        >
+                          {reply.likes} Likes
+                        </Button>
+                        &nbsp;
+                        <Button
+                          variant="outline-danger"
+                          onClick={() =>
+                            dispatch(deleteReplyComment(data.id, reply.replyId))
+                          }
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           );
         })}

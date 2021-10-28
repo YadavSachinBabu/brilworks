@@ -1,0 +1,52 @@
+.commentContainer {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid grey; */
+    padding: 20px;
+    border-radius: 07px;
+    margin: 20px 20px 10px 10vh;
+    width: 90%;
+}
+
+.addButton{
+    float: right;
+    margin-right: 30px;
+    margin-top: 08px;
+    margin-bottom: 10px;
+}
+.commentDiv{
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0px 0px 5px;
+}
+.replyDivButtons{
+    margin-left: 23px;
+}
+
+h3{
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    /* border: 1px solid grey; */
+    width: 90%;
+    padding: 8px;
+    border-radius: 07px;
+}
+
+h4{
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    /* border: 1px solid grey; */
+    width: 83.3%;
+    padding: 8px;
+    border-radius: 07px;
+    margin-left: 20px;
+}
+
+.replyContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+    margin-left: 2rem;
+}
+.commentButtons, .replyDivButtons{ 
+margin: 0px 10px 0px 10px;
+}
