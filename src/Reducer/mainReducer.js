@@ -33,11 +33,7 @@ export default function mainReducer(state = [], action) {
       );
       const repLikes = likeableData.replyComments.map((item) => {
         if (item.replyId === action.payload.replyId) {
-          if (item.likes === undefined || item.likes === null) {
-            return { ...item, likes: likeCount + 1 };
-          } else {
             return { ...item, likes: item.likes + 1 };
-          }
         } else {
           return item;
         }
